@@ -7,6 +7,8 @@
                 
 		$html = file_get_html( $portos );
 
+		if($html!=''){
+
 		//Starts table display
 		echo "<a href='http://84.23.214.33/wdev/escalas/'><table class='table table-bordered table-hover'>";
 		echo "<tr class='success'> <th> ID</th> <th>Navio</th> <th>Chegada</th> </tr>";
@@ -35,7 +37,12 @@
                         }
                   }
 		echo "</table></a>";
-}
+	}
+	}else{
+	$ttable = file_get_contents('escalas.txt');
+	echo $ttable;
+	}
+
 
 	//Updates "escalas.txt" if scrap is succefull
 		/*if($html->find( '.Table1inner' )){
