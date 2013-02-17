@@ -2,9 +2,10 @@
                 <?php 
 
 	//Check if source is available & then loads to object "portos"
-		if (file_exists("/var/www/wdev/wp-content/themes/booty/temp/portos.html")){
-                $portos = "/var/www/wdev/wp-content/themes/booty/temp/portos.html";
-                
+		if (file_exists(dirname(__FILE__)."/temp/portos.html")){
+                $portos = dirname(__FILE__)."/temp/portos.html";
+                //$portos = get_template_directory().'/temp/portos.html';
+
 		$html = file_get_html( $portos );
 
 		if($html!=''){
@@ -42,7 +43,6 @@
 	$ttable = file_get_contents('escalas.txt');
 	echo $ttable;
 	}
-
 
 	//Updates "escalas.txt" if scrap is succefull
 		/*if($html->find( '.Table1inner' )){

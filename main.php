@@ -77,6 +77,16 @@ function widget_logBook_control($args=array(), $params=array()) {
 	<?php
 }
 
+
+add_filter( 'page_template', 'escalas_page_template' );
+function escalas_page_template( $page_template )
+{
+    if ( is_page( 'escalas' ) ) {
+        $page_template = dirname( __FILE__ ) . '/mpage-escalas.php';
+    }
+    return $page_template;
+}
+
 add_action("plugins_loaded", "logBook_init");
 
 ?>
