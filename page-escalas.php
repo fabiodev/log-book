@@ -11,7 +11,8 @@
 		if($html!=''){
 
 		//Starts table display
-		echo "<a href='http://84.23.214.33/wdev/escalas/'><table class='table table-bordered table-hover'>";
+		$lpage = get_bloginfo('url');
+		echo "<a href=".$lpage."/index.php/escalas/><table class='table table-bordered table-hover'>";
 		echo "<tr class='success'> <th> ID</th> <th>Navio</th> <th>Chegada</th> </tr>";
 		foreach( $html->find( '.Table1inner' ) as $el ){ 
                         $strr= $el->find('table', 0);
@@ -20,7 +21,7 @@
                                 echo "<tr>";
 				
 				echo "<td>".$i."</td>";
-//
+
 				$ii=1;
                                 //foreach($TTD->find('td') as $outra){
 					echo "<td>";
