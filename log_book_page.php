@@ -7,16 +7,20 @@
 <?php while (have_posts()) : the_post(); ?>
 <article>
 <!-- <header class="page-header"> this puts a line & vertical spacing under the title-->
-  <h1><?php the_title(); ?></h1>
+  <h1 class="span8" style="margin-top:40px"><?php the_title(); ?></h1>
 <!-- </header> -->
 
 
 <?php 
+
+	$msg ="<div class='alert alert-info span4'><h4 style='color:black'>Attention:";
+	$msg .="</h4><p>the information below may not be accurate and we don't accept any responsability for the use of such information</p></div>";
+
 	//
 	$tt=apc_fetch('lbook_page');
 	if(isset($tt) && $tt != ""){
-		echo "<div class='alert alert-info'><h4>Attention: ";
-		echo "</h4><p>the information below may not be accurate and we don't accept any responsability for the use of such information</p></div>";
+		//Prints the responsibility alert and the table
+		echo $msg;
 		echo $tt;
 	}else{
 
@@ -89,13 +93,13 @@
 
 	//If cache exists display content
 		if(isset($tt) && $tt != ""){
-			echo "<div class='alert alert-info'><h4>Attention: ";
-			echo "</h4><p>the information below may not be accurate and we don't accept any responsability for the use of such information</p></div>";
+			//Prints the responsibility alert and the table
+			echo $msg;
 			echo $tt;
 		}else{
 	//Display error in faillure to load cache
-		echo "<div class='alert alert-error'><p>Oh Snap! Something went wrong I wonder what..</p>";
-		echo "<p> Try to reload this pag. If this message presists try again later or report the problem in the comments or by mail.</p></div>";
+		echo "<div class='alert alert-error'><p>Oh Snap! The Black Bierd Pirates are back ...</p>";
+		echo "<p>Try to reload this pag. If this message presists try again later or report the problem in the comments or by mail.</p></div><br>";
 
 		}
 	}
