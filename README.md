@@ -1,4 +1,5 @@
 <h1>Log book of ships</h1>
+
 <p>Functions:</p>
 <ul>
 <li>Show next arrivals</li>
