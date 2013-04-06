@@ -7,7 +7,7 @@
 <?php while (have_posts()) : the_post(); ?>
 <article>
 <!-- <header class="page-header"> this puts a line & vertical spacing under the title-->
-  <h1 class="span8" style="margin-top:40px; color:red"><?php the_title(); ?></h1>
+  <h1 class="span8" style="margin-top:40px"><?php the_title(); ?></h1>
 <!-- </header> -->
 
 
