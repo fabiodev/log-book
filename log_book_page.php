@@ -7,7 +7,9 @@
 <?php while (have_posts()) : the_post(); ?>
 <article>
 <!-- <header class="page-header"> this puts a line & vertical spacing under the title-->
-  <h1 class="span8" style="margin-top:40px"><?php the_title(); ?></h1>
+  <h1 class="span8" style="margin-top:40px"><?php the_title(); ?>
+	<span class="nav-header" style="float:right"><?php /*"Last updated at: ". date('F jS, Y');*/ ?></span>
+  </h1>
 <!-- </header> -->
 
 
@@ -21,7 +23,7 @@
 	if(isset($tt) && $tt != ""){
 		//Prints the responsibility alert and the table
 		echo $msg;
-		echo $tt;
+		echo $tt[0];
 	}else{
 
 	/* gets the source */
@@ -81,9 +83,12 @@
                         }
                   }
 		$vtable .= "</table>";
+		
+		$escalas_EmCache[0] = $vtable;
+		$escalas_EmCache[1] = "Last updated at: ". date('F jS, Y');
 
 		//stores into cache and defines array
-                apc_store('lbook_page', $vtable, 420);
+                apc_store('lbook_page', $escalas_EmCache, 900);
                 $tt=apc_fetch('lbook_page');
 
 		$html->clear(); 
@@ -95,7 +100,7 @@
 		if(isset($tt) && $tt != ""){
 			//Prints the responsibility alert and the table
 			echo $msg;
-			echo $tt;
+			echo $tt[0];
 		}else{
 	//Display error in faillure to load cache
 		echo "<div class='alert alert-error'><p>Oh Snap! The Black Bierd Pirates are back ...</p>";
