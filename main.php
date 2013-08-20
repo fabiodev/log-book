@@ -17,13 +17,17 @@ function widget_logBook($args=array(), $params=array()) {
   extract($args);
   $widgettitle = get_option('logBook_widget_title');
 
-  echo $before_widget;
+ echo $before_widget;
+
+  //Affix trial lacks div closure
+  //echo '<div class="alert sidebar-widget sidebar-nav" data-spy="affix" data-offset="200">';
 
   echo $before_title.$widgettitle.$after_title;
 
         require('log_book_widget.php');
 
-  echo $after_widget;
+
+ echo $after_widget;
 }
 
 function logBook_init(){

@@ -36,45 +36,105 @@
 
 		//Starts table construction
 		$vtable = "<table class='table table-bordered table-hover'>";
-		$vtable .= "<tr class='success'> <th>Navio</th> <th>Chegada</th> <th>Partida</th> <th>Origem</th> <th>Escala</th> <th>Destino</th> <th>Detalhes</th></tr>";
-		foreach( $html->find( '.Table1inner' ) as $el ){ 
-                        $strr= $el->find('table', 0);
-			$i=1;
-                        foreach( $strr->find('tr') as $TTD ){
+		$vtable .= "<tr class='success'> <th>ID</> <th>Navio</th> <th>Chegada</th> <th>Partida</th> <th>Origem</th> <th>Escala</th> <th>Destino</th> <th>Detalhes</th></tr>";
+
+		//Detects the start of the important table
+		foreach( $html->find( '.Table1inner' ) as $maintable ){ 
+			//Crops the main table
+                        $croppedSource= $maintable->find('table', 0);
+			$tableLine=1;
+			//$TRs contains all TR's on the table
+                        foreach( $croppedSource->find('tr') as $TRs ){
                                 $ii=1;
-                                foreach($TTD->find('td') as $outra){
-                                        if($ii==5 && $outra->plaintext=="Funchal"){
+				//$TDs contains all TD's of the TR on the table
+                                foreach($TRs->find('td') as $TDs){
+                                        $prtescala = " ";
+					$prtescala .= $TDs->plaintext;
+					if($ii==5 && stripos($prtescala, "Funchal")){
                                         	$vtable .="<tr class='info'>";
-                               			 foreach($TTD->find('td') as $outra){
-                                        		$vtable .= "<td>";
-                                        		$vtable .= $outra->plaintext;
-                                        		$vtable .="</td>";
+						$vtable .="<td>".$tableLine."</td>";
+						$ri=1;
+                               			 foreach($TRs->find('td') as $TDs){
+                                        		if($ri==5){
+								$vtable .= "<td id='escalasfunchal'><a href='http://dev.shipsoncamera.com/porto-turistico-do-funchal/' data-toggle='tooltip' title='Descubra o Porto do Funchal'>";
+							}else{
+								$vtable .= "<td>";
+							}
+                                        		$vtable .= $TDs->plaintext;
+                                        		$vtable .="</a></td>";
+							$ri++;
                                  		}
 						$vtable .= "</tr>";
-						$i++;
+						$tableLine++;
 
-                                        }elseif($ii==5 && $outra->plaintext=="Caniçal"){
+                                        }elseif($ii==5 && stripos($prtescala, "Caniçal")) {
                                         	$vtable .= "<tr class='error'>";
+                                                $vtable .="<td>".$tableLine."</td>";
 
-                                		foreach($TTD->find('td') as $outra){
-                                        		$vtable .= "<td>";
-                                        		$vtable .= $outra->plaintext;
-                                        		$vtable .="</td>";
-						$i++;
-                                 		}
-						$vtable .= "</tr>";
-
-                                        }
-                                        elseif($ii==5 && $outra->plaintext!="Caniçal" && $outra->plaintext!="Funchal"){
-                                                $vtable .= "<tr class='warning'>";
-
-                                                foreach($TTD->find('td') as $outra){
-                                                        $vtable .= "<td>";
-                                                        $vtable .= $outra->plaintext;
-                                                        $vtable .="</td>";
-						$i++;
+                                                $ri=1;
+                                                 foreach($TRs->find('td') as $TDs){
+                                                        if($ri==5){
+                                                                $vtable .= "<td id='escalascanical'><a href='http://www.youtube.com/user/ShipsOnCamera' data-toggle='tooltip' title='Descubra o Porto do Caniçal'>";
+                                                        }else{
+                                                                $vtable .= "<td>";
+                                                        }
+                                                        $vtable .= $TDs->plaintext;
+                                                        $vtable .="</a></td>";
+                                                        $ri++;
                                                 }
                                                 $vtable .= "</tr>";
+                                                $tableLine++;
+
+                                        }elseif($ii==5 && stripos($prtescala, "socorridos")) {
+                                                $vtable .= "<tr class='warning'>";
+                                                $vtable .="<td>".$tableLine."</td>";
+
+                                                $ri=1;
+                                                 foreach($TRs->find('td') as $TDs){
+                                                        if($ri==5){
+                                                                $vtable .= "<td id='escalascanical'><a href='http://www.youtube.com/user/ShipsOnCamera' data-toggle='tooltip' title='Descubra os Terminais dos Socorridos'>";
+                                                        }else{
+                                                                $vtable .= "<td>";
+                                                        }
+                                                        $vtable .= $TDs->plaintext;
+                                                        $vtable .="</a></td>";
+                                                        $ri++;
+                                                }
+                                                $vtable .= "</tr>";
+                                                $tableLine++;
+
+                                        }elseif($ii==5 && stripos($prtescala, "porto santo")) {
+                                                $vtable .= "<tr class='warning'>";
+                                                $vtable .="<td>".$tableLine."</td>";
+
+                                                $ri=1;
+                                                 foreach($TRs->find('td') as $TDs){
+                                                        if($ri==5){
+                                                                $vtable .= "<td id='escalascanical'><a href='http://www.youtube.com/user/ShipsOnCamera' data-toggle='tooltip' title='Descubra o porto do Porto Santo'>";
+                                                        }else{
+                                                                $vtable .= "<td>";
+                                                        }
+                                                        $vtable .= $TDs->plaintext;
+                                                        $vtable .="</a></td>";
+                                                        $ri++;
+                                                }
+                                                $vtable .= "</tr>";
+                                                $tableLine++;
+
+
+                                        //}elseif($ii==5 && $TDs->plaintext!="Caniçal" && $TDs->plaintext!="Funchal"){
+					}elseif($ii==5){
+                                                $vtable .= "<tr class='warning'>";
+                                                $vtable .="<td>".$tableLine."</td>";
+
+                                                foreach($TRs->find('td') as $TDs){
+                                                        $vtable .= "<td>";
+                                                        $vtable .= $TDs->plaintext;
+                                                        $vtable .="</td>";
+						//$tableLine++;
+                                                }
+                                                $vtable .= "</tr>";
+						$tableLine++;
                                         }
 
                                         $ii++;
@@ -82,13 +142,14 @@
 
                         }
                   }
+		$vtable .= "<tr><td colspan='8'><b>Last updated:</b> ".date('F jS, Y')." at <span class='label label-info'>".date('H')."H".date('i')."</span></td></tr>";
 		$vtable .= "</table>";
 		
 		$escalas_EmCache[0] = $vtable;
 		$escalas_EmCache[1] = "Last updated at: ". date('F jS, Y');
 
 		//stores into cache and defines array
-                apc_store('lbook_page', $escalas_EmCache, 900);
+                apc_store('lbook_page', $escalas_EmCache, 5);
                 $tt=apc_fetch('lbook_page');
 
 		$html->clear(); 
