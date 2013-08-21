@@ -12,8 +12,63 @@
   </h1>
 <!-- </header> -->
 
+<?php
+
+        $args = array(
+    'smallest'                  => 12, 
+    'largest'                   => 12,
+    'unit'                      => 'pt', 
+    'number'                    => 0,  
+    'format'                    => 'array',
+    'orderby'                   => 'name', 
+    'order'                     => 'ASC',
+    'exclude'                   => null, 
+    'include'                   => null, 
+    'link'                      => 'view', 
+    'taxonomy'                  => 'post_tag',
+    'echo'                      => true,
+);
+ $terms = wp_tag_cloud( $args );
+
+
+ $count = count($terms);
+ if ( $count > 0 ){
+        $ship_tag=0;
+     foreach ( $terms as $term ) {
+        if(stripos($term, " imo ")){
+		 $shipList[] = $term ;
+                $ship_tag++;
+        }
+     }
+}
+
+//Sets dummy value of detalhes
+//$detalhes ="Nº IMO: 9388390 País de Registo: Portugal Agente: E. N. Madeirense Carga: Contentor Motivo da Escala: Operações Comerciais";
+
+        //Verifica que a lista de tags nao esta vazia e que os detalhes tem um IMO number
+  //      if(empty($shipsList) && preg_match('/(?P<digit>\d{7})/',$detalhes,$matched)){
+             //testa cada tag
+  //           foreach ($shipList as $ship) {
+                //Confirma se a tag tem imo com 7 digitos
+  //              if(preg_match('/(?P<digit>\d{7})/',$ship,$matches)){
+                   //Compara os IMO's e imprime os detalhes finais
+/*                   if($matched['digit'] == $matches['digit']){
+                        $spli=preg_split('/(?P<digit>\d{7})/',$detalhes, -1);
+                        echo $ship;
+                        echo $spli[1];
+                        break;
+                        }
+                    }
+                }
+        }
+}
+*/
+?>
+
 
 <?php 
+
+	date_default_timezone_set('Atlantic/Madeira');
 
 	$msg ="<div class='alert alert-info span4'><h4 style='color:black'>Attention:";
 	$msg .="</h4><p>the information below may not be accurate and we don't accept any responsability for the use of such information</p></div>";
@@ -55,43 +110,93 @@
 						$vtable .="<td>".$tableLine."</td>";
 						$ri=1;
                                			 foreach($TRs->find('td') as $TDs){
-                                        		if($ri==5){
+                                        		if($ri==25){
 								$vtable .= "<td id='escalasfunchal'><a href='http://dev.shipsoncamera.com/porto-turistico-do-funchal/' data-toggle='tooltip' title='Descubra o Porto do Funchal'>";
-							}else{
-								$vtable .= "<td>";
-							}
-                                        		$vtable .= $TDs->plaintext;
-                                        		$vtable .="</a></td>";
-							$ri++;
-                                 		}
-						$vtable .= "</tr>";
-						$tableLine++;
-
+								$vtable .= $TDs->plaintext."</td>";
+							}elseif($ri==27){
+        $cleanTDs = $TDs->plaintext;
+        //Verifica que a lista de tags nao esta vazia e que os detalhes tem um IMO number
+        if(empty($shipsList) && preg_match('/(?P<digit>\d{7})/',$cleanTDs,$matched)){
+             //testa cada tag
+             foreach ($shipList as $ship) {
+                //Confirma se a tag tem imo com 7 digitos
+                if(preg_match('/(?P<digit>\d{7})/',$ship,$matches)){
+                   //Compara os IMO's e imprime os detalhes finais
+                        if($matched['digit'] == $matches['digit']){
+                                $spli=preg_split('/(?P<digit>\d{7})/',$cleanTDs, -1);
+                                $vtable .= "<td>".$ship.$spli[1]."</>";
+                                //$vtable .= $spli[1];
+                                break;
+                        }else{
+                                $vtable .= "<td>".$TDs->plaintext."</td>";
+                                break;
+                        }
+                }else{
+                        $vtable .= "<td>".$TDs->plaintext."</td>";
+                        break;
+                }
+             }
+        }else{
+                $vtable .= "<td>".$TDs->plaintext."</td>";
+        }
+                                                        }else{
+                                                                $vtable .= "<td>".$TDs->plaintext."</td>";
+                                                        }
+                                                        $ri++;
+                                                }
+                                                $vtable .= "</tr>";
+                                                $tableLine++;
+//Canical
                                         }elseif($ii==5 && stripos($prtescala, "Caniçal")) {
                                         	$vtable .= "<tr class='error'>";
                                                 $vtable .="<td>".$tableLine."</td>";
 
                                                 $ri=1;
                                                  foreach($TRs->find('td') as $TDs){
-                                                        if($ri==5){
+                                                        if($ri==25){
                                                                 $vtable .= "<td id='escalascanical'><a href='http://www.youtube.com/user/ShipsOnCamera' data-toggle='tooltip' title='Descubra o Porto do Caniçal'>";
+                                                                $vtable .= $TDs->plaintext."</td>";
+                                                        }elseif($ri==27){
+        $cleanTDs = $TDs->plaintext;
+        //Verifica que a lista de tags nao esta vazia e que os detalhes tem um IMO number
+        if(empty($shipsList) && preg_match('/(?P<digit>\d{7})/',$cleanTDs,$matched)){
+             //testa cada tag
+             foreach ($shipList as $ship) {
+                //Confirma se a tag tem imo com 7 digitos
+                if(preg_match('/(?P<digit>\d{7})/',$ship,$matches)){
+                   //Compara os IMO's e imprime os detalhes finais
+			if($matched['digit'] == $matches['digit']){
+                        	$spli=preg_split('/(?P<digit>\d{7})/',$cleanTDs, -1);
+                        	$vtable .= "<td>".$ship.$spli[1]."</>";
+                        	break;
+                   	}else{
+                		$vtable .= "<td>".$TDs->plaintext."</td>";
+				break;
+		   	}
+		}else{
+			$vtable .= "<td>".$TDs->plaintext."</td>";
+                        //break;
+                }
+             }
+        }else{
+		$vtable .= "<td>".$TDs->plaintext."</td>";
+		//break;
+	}
                                                         }else{
-                                                                $vtable .= "<td>";
+                                                                $vtable .= "<td>".$TDs->plaintext."</td>";
                                                         }
-                                                        $vtable .= $TDs->plaintext;
-                                                        $vtable .="</a></td>";
                                                         $ri++;
                                                 }
                                                 $vtable .= "</tr>";
                                                 $tableLine++;
-
+//Socorridos
                                         }elseif($ii==5 && stripos($prtescala, "socorridos")) {
                                                 $vtable .= "<tr class='warning'>";
                                                 $vtable .="<td>".$tableLine."</td>";
 
                                                 $ri=1;
                                                  foreach($TRs->find('td') as $TDs){
-                                                        if($ri==5){
+                                                        if($ri==25){
                                                                 $vtable .= "<td id='escalascanical'><a href='http://www.youtube.com/user/ShipsOnCamera' data-toggle='tooltip' title='Descubra os Terminais dos Socorridos'>";
                                                         }else{
                                                                 $vtable .= "<td>";
@@ -102,14 +207,14 @@
                                                 }
                                                 $vtable .= "</tr>";
                                                 $tableLine++;
-
+//Porto Santo
                                         }elseif($ii==5 && stripos($prtescala, "porto santo")) {
                                                 $vtable .= "<tr class='warning'>";
                                                 $vtable .="<td>".$tableLine."</td>";
 
                                                 $ri=1;
                                                  foreach($TRs->find('td') as $TDs){
-                                                        if($ri==5){
+                                                        if($ri==25){
                                                                 $vtable .= "<td id='escalascanical'><a href='http://www.youtube.com/user/ShipsOnCamera' data-toggle='tooltip' title='Descubra o porto do Porto Santo'>";
                                                         }else{
                                                                 $vtable .= "<td>";
@@ -121,7 +226,7 @@
                                                 $vtable .= "</tr>";
                                                 $tableLine++;
 
-
+//Outros portos
                                         //}elseif($ii==5 && $TDs->plaintext!="Caniçal" && $TDs->plaintext!="Funchal"){
 					}elseif($ii==5){
                                                 $vtable .= "<tr class='warning'>";
