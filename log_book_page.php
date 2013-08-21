@@ -254,7 +254,7 @@
 		$escalas_EmCache[1] = "Last updated at: ". date('F jS, Y');
 
 		//stores into cache and defines array
-                apc_store('lbook_page', $escalas_EmCache, 5);
+                apc_store('lbook_page', $escalas_EmCache, 900);
                 $tt=apc_fetch('lbook_page');
 
 		$html->clear(); 
