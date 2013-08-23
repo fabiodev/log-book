@@ -15,7 +15,7 @@
 
 		//Starts table display
 		$lpage = get_bloginfo('url');
-		$short_table = "<a href=".$lpage."/index.php/escalas/><table class='table table-hover'>";
+		$short_table = "<a href=".$lpage."/escalas/><table class='table table-hover'>";
 		$short_table .= "<tr class='success'> <th> ID</th> <th>Navio</th> <th>Chegada</th> </tr>";
 		foreach( $html->find( '.Table1inner' ) as $el ){ 
                         $strr= $el->find('table', 0);
