@@ -91,7 +91,7 @@
 
 		//Starts table construction
 		$vtable = "<table class='table table-bordered table-hover'>";
-		$vtable .= "<tr class='success'> <th>ID</> <th>Navio</th> <th>Chegada</th> <th>Partida</th> <th>Origem</th> <th>Escala</th> <th>Destino</th> <th>Detalhes</th></tr>";
+		$vtable .= "<tr class='success'> <th>ID</th> <th>Navio</th> <th>Chegada</th> <th>Partida</th> <th>Origem</th> <th>Escala</th> <th>Destino</th> <th>Detalhes</th></tr>";
 
 		//Detects the start of the important table
 		foreach( $html->find( '.Table1inner' ) as $maintable ){ 
