@@ -307,6 +307,14 @@ at <?=$comment->comment_date?>
 	endforeach; ?>
 <?php include(get_template_directory().'/comments.php'); ?>
 </section>
+
+<?php
+        //Custom Page Widgets
+        if (!dynamic_sidebar('custom_page_sidebar')) {
+                //include('lib/sidebar-static.php');
+        }
+?>
+
 </div>
 
 </div>
