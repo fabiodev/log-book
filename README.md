@@ -1,4 +1,4 @@
-<h1>Log book of ships</h1>
+<h1>Log book of ships plugin</h1>
 
 <h2>Testing diferent remotes push fetch </h2>
 
