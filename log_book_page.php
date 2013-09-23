@@ -69,8 +69,10 @@
 <?php 
 
 	date_default_timezone_set('Atlantic/Madeira');
+	$permalink = get_permalink( $id );
 
-	$msg ="<div class='alert alert-info span4'><h4 style='color:black'>Attention:";
+	$msg ="<div class='pull-right'><div class='fb-like pull-right' data-href='".$permalink."' data-width='350' data-layout='button_count' data-show-faces='true' data-send='true'></div></div>";
+	$msg .="<div class='alert alert-info span4'><h4 style='color:black'>Attention:";
 	$msg .="</h4><p>the information below may not be accurate and we don't accept any responsability for the use of such information</p></div>";
 
 	//
