@@ -101,7 +101,7 @@ function get_source(){
 
         if(curl_exec($cr) === false)
         {
-        echo 'Curl error: ' . curl_error($cr);
+        //echo 'Curl error: ' . curl_error($cr);
         }
         else
         {
