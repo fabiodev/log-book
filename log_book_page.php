@@ -271,21 +271,24 @@
 			echo $tt[0];
 		}else{
 	//Display error in faillure to load cache
-		echo "<div class='alert alert-error'><p>Oh Snap! The Black Bierd Pirates are back ...</p>";
-		echo "<p>Try to reload this pag. If this message presists try again later or report the problem in the comments or by mail.</p></div><br>";
+		echo "<div class='alert alert-error span4'><p>Oh Snap! The Black Bierd Pirates are back ...</p>";
+		echo "<p>Try to reload this pag. If this message presists try again later or report the problem in the comments or by mail.</p></div>";
 
 		}
 	}
 
 
-                ?>
-<div class="alert">
+?>
+</div>
+</article></section>
+<article><section>
+<div class="alert span12">
 <?php the_content(); ?></div>
 </article>
 <?php endwhile; ?>
 </section>
 
-</div>
+<!-- </div> -->
 
 <section id="comments">
 <h3>Comments</h3>
