@@ -92,12 +92,20 @@ function get_source(){
 	curl_close($cr);
 
 	// Envia os cookies e faz request
-	$cr = curl_init('http://www.portosdamadeira.com/mpcore.php?name=Escalas&file=diarias');
+	/*$cr = curl_init('http://www.portosdamadeira.com/mpcore.php?name=Escalas&file=diarias');
 	curl_setopt($cr, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($cr, CURLOPT_COOKIEFILE, $cookies);
 	curl_setopt($cr, CURLOPT_CONNECTTIMEOUT, 2);
 	curl_setopt($cr, CURLOPT_TIMEOUT, 2);
-	$buf2 = curl_exec($cr);
+	$buf2 = curl_exec($cr);*/
+
+	//New source
+	$cr = curl_init('http://www.apram.pt/site/index.php/pt/portos/movimento-de-navios');
+        curl_setopt($cr, CURLOPT_RETURNTRANSFER, true);
+        //curl_setopt($cr, CURLOPT_COOKIEFILE, $cookies);
+        curl_setopt($cr, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($cr, CURLOPT_TIMEOUT, 2);
+        $buf2 = curl_exec($cr);
 
         if(curl_exec($cr) === false)
         {

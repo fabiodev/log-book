@@ -89,174 +89,96 @@
 		$html = str_get_html( $loaded);
 
 		//checks if the source is correct
-		 if(isset($html) && $html != "" && $html->find( '.Table1inner' ) ){
+		//if(isset($html) && $html != "" && $html->find( '.Table1inner' ) ){
+		if(isset($html) && $html != "" && $html->find( '.container' ) ){
 
 		//Starts table construction
 		$vtable = "<table class='table table-bordered table-hover'>";
 		$vtable .= "<tr class='success'> <th>ID</th> <th>Navio</th> <th>Chegada</th> <th>Partida</th> <th>Origem</th> <th>Escala</th> <th>Destino</th> <th>Detalhes</th></tr>";
 
 		//Detects the start of the important table
-		foreach( $html->find( '.Table1inner' ) as $maintable ){ 
-			//Crops the main table
-                        $croppedSource= $maintable->find('table', 0);
+		//foreach( $html->find( '.Table1inner' ) as $maintable ){
+		foreach( $html->find( '#ele2' ) as $maintable ){
+			//Crops the main table and counts lines
 			$tableLine=1;
-			//$TRs contains all TR's on the table
-                        foreach( $croppedSource->find('tr') as $TRs ){
-                                $ii=1;
-				//$TDs contains all TD's of the TR on the table
-                                foreach($TRs->find('td') as $TDs){
-                                        $prtescala = " ";
-					$prtescala .= $TDs->plaintext;
-					if($ii==5 && stripos($prtescala, "Funchal")){
-                                        	$vtable .="<tr class='info'>";
-						$vtable .="<td>".$tableLine."</td>";
-						$ri=1;
-                               			 foreach($TRs->find('td') as $TDs){
-                                        		if($ri==25){
-								$vtable .= "<td id='escalasfunchal'><a href='http://dev.shipsoncamera.com/porto-turistico-do-funchal/' data-toggle='tooltip' title='Descubra o Porto do Funchal'>";
-								$vtable .= $TDs->plaintext."</td>";
-							}elseif($ri==27){
-        $cleanTDs = $TDs->plaintext;
-        //Verifica que a lista de tags nao esta vazia e que os detalhes tem um IMO number
-        if(empty($shipsList) && preg_match('/(?P<digit>\d{7})/',$cleanTDs,$matched)){
-             //testa cada tag
-             foreach ($shipList as $ship) {
-                //Confirma se a tag tem imo com 7 digitos
-                if(preg_match('/(?P<digit>\d{7})/',$ship,$matches)){
-                   //Compara os IMO's e imprime os detalhes finais
-                        if($matched['digit'] == $matches['digit']){
-                                $spli=preg_split('/(?P<digit>\d{7})/',$cleanTDs, -1);
-                                $vtable .= "<td>".$ship.$spli[1]."</>";
-                                //$vtable .= $spli[1];
-                                break;
-                        }else{
-                                $vtable .= "<td>".$TDs->plaintext."</td>";
-                                break;
-                        }
-                }else{
-                        $vtable .= "<td>".$TDs->plaintext."</td>";
-                        break;
-                }
-             }
-        }else{
-                $vtable .= "<td>".$TDs->plaintext."</td>";
-        }
-                                                        }else{
-                                                                $vtable .= "<td>".$TDs->plaintext."</td>";
-                                                        }
-                                                        $ri++;
-                                                }
-                                                $vtable .= "</tr>";
-                                                $tableLine++;
-//Canical
-                                        }elseif($ii==5 && stripos($prtescala, "Caniçal")) {
-                                        	$vtable .= "<tr class='error'>";
-                                                $vtable .="<td>".$tableLine."</td>";
+			$shipList="";
+			echo "<article>";
+			foreach( $maintable->find( '.coluna-texto' ) as $ship ){
+				//raw printout of DIV by ship
+				$shipList .= $ship;
 
-                                                $ri=1;
-                                                 foreach($TRs->find('td') as $TDs){
-                                                        if($ri==25){
-                                                                $vtable .= "<td id='escalascanical'><a href='http://www.youtube.com/user/ShipsOnCamera' data-toggle='tooltip' title='Descubra o Porto do Caniçal'>";
-                                                                $vtable .= $TDs->plaintext."</td>";
-                                                        }elseif($ri==27){
-        $cleanTDs = $TDs->plaintext;
-        //Verifica que a lista de tags nao esta vazia e que os detalhes tem um IMO number
-        if(empty($shipsList) && preg_match('/(?P<digit>\d{7})/',$cleanTDs,$matched)){
-             //testa cada tag
-             foreach ($shipList as $ship) {
-                //Confirma se a tag tem imo com 7 digitos
-                if(preg_match('/(?P<digit>\d{7})/',$ship,$matches)){
-                   //Compara os IMO's e imprime os detalhes finais
-			if($matched['digit'] == $matches['digit']){
-                        	$spli=preg_split('/(?P<digit>\d{7})/',$cleanTDs, -1);
-                        	$vtable .= "<td>".$ship.$spli[1]."</>";
-                        	break;
-                   	}else{
-                		$vtable .= "<td>".$TDs->plaintext."</td>";
-				break;
-		   	}
-		}else{
-			$vtable .= "<td>".$TDs->plaintext."</td>";
-                        //break;
-                }
-             }
-        }else{
-		$vtable .= "<td>".$TDs->plaintext."</td>";
-		//break;
-	}
-                                                        }else{
-                                                                $vtable .= "<td>".$TDs->plaintext."</td>";
-                                                        }
-                                                        $ri++;
-                                                }
-                                                $vtable .= "</tr>";
-                                                $tableLine++;
-//Socorridos
-                                        }elseif($ii==5 && stripos($prtescala, "socorridos")) {
-                                                $vtable .= "<tr class='warning'>";
-                                                $vtable .="<td>".$tableLine."</td>";
+				//raw data
+				$navio = $ship->find( '.col-dir' );
+				$chegada = "";
+				$partida = "";
+				$origem = "";
+				$escala = "";
+				$destino = "";
+				$agente = "";
 
-                                                $ri=1;
-                                                 foreach($TRs->find('td') as $TDs){
-                                                        if($ri==25){
-                                                                $vtable .= "<td id='escalascanical'><a href='http://www.youtube.com/user/ShipsOnCamera' data-toggle='tooltip' title='Descubra os Terminais dos Socorridos'>";
-                                                        }else{
-                                                                $vtable .= "<td>";
-                                                        }
-                                                        $vtable .= $TDs->plaintext;
-                                                        $vtable .="</a></td>";
-                                                        $ri++;
-                                                }
-                                                $vtable .= "</tr>";
-                                                $tableLine++;
-//Porto Santo
-                                        }elseif($ii==5 && stripos($prtescala, "porto santo")) {
-                                                $vtable .= "<tr class='warning'>";
-                                                $vtable .="<td>".$tableLine."</td>";
+				//getting Ship Name
+				foreach( $ship->find('h2') as $detalhe){
+					$navio = $detalhe->plaintext;
+				}
 
-                                                $ri=1;
-                                                 foreach($TRs->find('td') as $TDs){
-                                                        if($ri==25){
-                                                                $vtable .= "<td id='escalascanical'><a href='http://www.youtube.com/user/ShipsOnCamera' data-toggle='tooltip' title='Descubra o porto do Porto Santo'>";
-                                                        }else{
-                                                                $vtable .= "<td>";
-                                                        }
-                                                        $vtable .= $TDs->plaintext;
-                                                        $vtable .="</a></td>";
-                                                        $ri++;
-                                                }
-                                                $vtable .= "</tr>";
-                                                $tableLine++;
+				//getting DATA
+				$indexDetalhe = 1;
+                                foreach( $ship->find('.col-dir') as $detalhe){
 
-//Outros portos
-                                        //}elseif($ii==5 && $TDs->plaintext!="Caniçal" && $TDs->plaintext!="Funchal"){
-					}elseif($ii==5){
-                                                $vtable .= "<tr class='warning'>";
-                                                $vtable .="<td>".$tableLine."</td>";
+                                //getting data de chegada
+					if($indexDetalhe==2){
+						$chegada = $detalhe->plaintext;
+				}
 
-                                                foreach($TRs->find('td') as $TDs){
-                                                        $vtable .= "<td>";
-                                                        $vtable .= $TDs->plaintext;
-                                                        $vtable .="</td>";
-						//$tableLine++;
-                                                }
-                                                $vtable .= "</tr>";
-						$tableLine++;
-                                        }
+				//getting data de partida
+                                        elseif($indexDetalhe==3){
+                                                $partida = $detalhe->plaintext;
+                                }
 
-                                        $ii++;
-                                 }
+				//getting porto de origem
+                                        elseif($indexDetalhe==4){
+                                                $origem = $detalhe->plaintext;
+                                }
 
-                        }
-                  }
+				//getting porto de escala
+                                        elseif($indexDetalhe==6){
+                                                $escala = $detalhe->plaintext;
+                                }
+
+				//getting porto de destino
+                                        elseif($indexDetalhe==5){
+                                                $destino = $detalhe->plaintext;
+                                }
+
+				//getting agente
+                                        elseif($indexDetalhe==1){
+                                                $agente = $detalhe->plaintext;
+                                }
+
+				$indexDetalhe++;
+				}
+
+				//Creating each Ship Row
+				$vtable .= "<tr>";
+				$vtable .= "<td>".$tableLine."</td>";
+				$vtable .= "<td>".$navio."</td><td>".$chegada."</td><td>".$partida."</td><td>".$origem."</td><td>".$escala."</td><td>".$destino."</td>";
+				$vtable .= "<td>".$agente."</td>";
+				$vtable .= "</tr>";
+				$tableLine++;
+			}
+			echo "</article>";
+		}
+
+		} //END check source IF statement
+
 		$vtable .= "<tr><td colspan='8'><b>Last updated:</b> ".date('F jS, Y')." at <span class='label label-info'>".date('H')."H".date('i')."</span></td></tr>";
 		$vtable .= "</table>";
-		
+
 		$escalas_EmCache[0] = $vtable;
 		$escalas_EmCache[1] = "Last updated at: ". date('F jS, Y');
 
 		//stores into cache and defines array
-                apc_store('lbook_page', $escalas_EmCache, 900);
+                apc_store('lbook_page', $escalas_EmCache, 10);
                 $tt=apc_fetch('lbook_page');
 
 		$html->clear(); 
@@ -268,6 +190,7 @@
 		if(isset($tt) && $tt != ""){
 			//Prints the responsibility alert and the table
 			echo $msg;
+			//echo $shipList;
 			echo $tt[0];
 		}else{
 	//Display error in faillure to load cache
@@ -275,8 +198,6 @@
 		echo "<p>Try to reload this pag. If this message presists try again later or report the problem in the comments or by mail.</p></div>";
 
 		}
-	}
-
 
 ?>
 </div>
