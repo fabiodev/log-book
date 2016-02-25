@@ -11,47 +11,71 @@
 	$html =str_get_html($loaded);
 
 	//checks if the source is correct
-	if(isset($html) && $html != "" && $html->find( '.Table1inner' ) ){
-
+	if(isset($html) && $html != "" && $html->find( '.container' ) ){
 		//Starts table display
 		$lpage = get_bloginfo('url');
 		$short_table = "<a href=".$lpage."/escalas/><table class='table table-hover'>";
 		$short_table .= "<tr class='success'> <th> ID</th> <th>Navio</th> <th>Chegada</th> </tr>";
-		foreach( $html->find( '.Table1inner' ) as $el ){ 
-                        $strr= $el->find('table', 0);
-			$i=1;
-                        foreach( $strr->find('tr') as $TTD ){
-                                $short_table .= "<tr>";
-				
-				$short_table .= "<td>".$i."</td>";
 
-				$ii=1;
-                                //foreach($TTD->find('td') as $outra){
-					$short_table .= "<td>";
-                                        //echo $outra->plaintext;
-					$short_table .= $TTD->find('td',0)->plaintext;
-                                        $short_table .= "</td>";
+//START new SCRAPING
+		foreach( $html->find( '#ele2' ) as $maintable ){
+			//Crops the main table and counts lines
+  			$tableLine=1;
 
-                                        $short_table .= "<td>";
-                                        //echo $outra->plaintext;
-                                        $short_table .= $TTD->find('td',1)->plaintext;
-                                        $short_table .= "</td>";
-				// }
-				$i++;
-                                $short_table .= "</tr>";
-                        }
-                  }
+			$shipList="";
+			foreach( $maintable->find( '.coluna-texto' ) as $ship ){
+				//raw printout of DIV by ship
+				$shipList .= $ship;
+
+				//raw data
+				$navio = "";
+				$chegada = "";
+				$partida = "";
+				$origem = "";
+				$escala = "";
+				$destino = "";
+				$agente = "";
+
+				//getting Ship Name
+				foreach( $ship->find('h2') as $detalhe){
+					$navio = $detalhe->plaintext;
+				}
+
+				//getting DATA
+				$indexDetalhe = 1;
+                                foreach( $ship->find('.col-dir') as $detalhe){
+
+                                //getting data de chegada
+					if($indexDetalhe==2){
+						$chegada = $detalhe->plaintext;
+					}
+
+				$indexDetalhe++;
+				}
+
+				//Creating each Ship Row
+				$short_table .= "<tr>";
+				$short_table .= "<td>".$tableLine."</td>";
+				$short_table .= "<td>".$navio."</td><td>".$chegada."</td><td>";
+				$short_table .= "</tr>";
+				$tableLine++;
+			}
+		}
+
+		} //END check source IF statement
+//END new SCRAPING
+
+
 		$short_table .= "</table></a>";
 		$short_table .= "<a class='btn btn-mini btn-success' style='margin-left:34%' href=/index.php/escalas/>Mais detalhes >></a>";
 
                 //stores into cache and defines array
-                apc_store('lbook_widget', $short_table, 420);
+                apc_store('lbook_widget', $short_table, 900);
                 $tt=apc_fetch('lbook_widget');
 
                 $html->clear(); 
                 unset($html);
 
-                }
 
         //If cache exists display content
                 if(isset($tt) && $tt != ""){
@@ -62,5 +86,5 @@
 		echo "<p>Try to reload this page. If this message pressists try again later or report the problem.</p></div>";
 
                 }
-	}
+}
                 ?>

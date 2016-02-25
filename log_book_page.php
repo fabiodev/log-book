@@ -6,11 +6,9 @@
 <section>
 <?php while (have_posts()) : the_post(); ?>
 <article>
-<!-- <header class="page-header"> this puts a line & vertical spacing under the title-->
-  <h1 class="span8" style="margin-top:40px"><?php the_title(); ?>
+  <h1 class="span8" style="margin-top:40px"><?php the_title(); //Page Title ?>
 	<span class="nav-header" style="float:right"><?php /*"Last updated at: ". date('F jS, Y');*/ ?></span>
   </h1>
-<!-- </header> -->
 
 <?php
 
@@ -89,7 +87,6 @@
 		$html = str_get_html( $loaded);
 
 		//checks if the source is correct
-		//if(isset($html) && $html != "" && $html->find( '.Table1inner' ) ){
 		if(isset($html) && $html != "" && $html->find( '.container' ) ){
 
 		//Starts table construction
@@ -97,7 +94,6 @@
 		$vtable .= "<tr class='success'> <th>ID</th> <th>Navio</th> <th>Chegada</th> <th>Partida</th> <th>Origem</th> <th>Escala</th> <th>Destino</th> <th>Detalhes</th></tr>";
 
 		//Detects the start of the important table
-		//foreach( $html->find( '.Table1inner' ) as $maintable ){
 		foreach( $html->find( '#ele2' ) as $maintable ){
 			//Crops the main table and counts lines
 			$tableLine=1;
@@ -178,13 +174,12 @@
 		$escalas_EmCache[1] = "Last updated at: ". date('F jS, Y');
 
 		//stores into cache and defines array
-                apc_store('lbook_page', $escalas_EmCache, 10);
+                apc_store('lbook_page', $escalas_EmCache, 900);
                 $tt=apc_fetch('lbook_page');
 
 		$html->clear(); 
 		unset($html);
 
-		}
 
 	//If cache exists display content
 		if(isset($tt) && $tt != ""){
@@ -198,6 +193,7 @@
 		echo "<p>Try to reload this pag. If this message presists try again later or report the problem in the comments or by mail.</p></div>";
 
 		}
+}
 
 ?>
 </div>
