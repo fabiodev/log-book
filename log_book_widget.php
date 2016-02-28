@@ -14,10 +14,10 @@
 	if(isset($html) && $html != "" && $html->find( '.container' ) ){
 		//Starts table display
 		$lpage = get_bloginfo('url');
-		$short_table = "<a href=".$lpage."/escalas/><table class='table table-hover'>";
+		$short_table = "<a href=".$lpage."/escalas/><table class='table table-hover' style='overflow-x:auto'>";
 		$short_table .= "<tr class='success'> <th> ID</th> <th>Navio</th> <th>Chegada</th> </tr>";
 
-//START new SCRAPING
+		//START new SCRAPING
 		foreach( $html->find( '#ele2' ) as $maintable ){
 			//Crops the main table and counts lines
   			$tableLine=1;
@@ -51,7 +51,7 @@
 					}
 
 				$indexDetalhe++;
-				}
+				}//END new SCRAPING
 
 				//Creating each Ship Row
 				$short_table .= "<tr>";
@@ -63,14 +63,13 @@
 		}
 
 		} //END check source IF statement
-//END new SCRAPING
 
 
 		$short_table .= "</table></a>";
 		$short_table .= "<a class='btn btn-mini btn-success' style='margin-left:34%' href=/index.php/escalas/>Mais detalhes >></a>";
 
                 //stores into cache and defines array
-                apc_store('lbook_widget', $short_table, 900);
+                apc_store('lbook_widget', $short_table, 10);
                 $tt=apc_fetch('lbook_widget');
 
                 $html->clear(); 
@@ -79,10 +78,10 @@
 
         //If cache exists display content
                 if(isset($tt) && $tt != ""){
-                        echo $tt;
+                        echo "<div style='overflow-x:auto'>" .$tt."</div>";
                 }else{
         //Display error in faillure to load cache
-                echo "<div class='alert alert-error'><p>Oh Snap! Something went wrong I wonder what..</p>";
+                echo "<div class='alert alert-error' ><p>Oh Snap! Something went wrong I wonder what..</p>";
 		echo "<p>Try to reload this page. If this message pressists try again later or report the problem.</p></div>";
 
                 }
