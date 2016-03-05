@@ -121,6 +121,87 @@ function get_source(){
         return $buf2;
 }
 
+function get_shipsData(){
+
+	$tt=apc_fetch('lbook_page');
+
+	if(isset($tt) && $tt != ""){
+		//Cache valida
+	}else{
+	/* gets the source */
+	$loaded =get_source();
+
+	 /*loads DOM for scrapping*/
+	$html = str_get_html( $loaded);
+
+		//checks if the source is correct
+		if(isset($html) && $html != "" && $html->find( '.container' ) ){
+
+		//Detects the start of the important table
+		foreach( $html->find( '#ele2' ) as $maintable ){
+			//Crops the main table and counts lines
+			$tableLine=1;
+
+			foreach( $maintable->find( '.coluna-texto' ) as $ship ){
+				//raw data
+				//$navio = $ship->find( '.col-dir' );
+				$chegada = "";
+				$partida = "";
+				$origem = "";
+				$escala = "";
+				$destino = "";
+				$agente = "";
+				//getting Ship Name
+				foreach( $ship->find('h2') as $detalhe){
+					$navio = $detalhe->plaintext;
+				}
+				//getting DATA
+				$indexDetalhe = 1;
+                                foreach( $ship->find('.col-dir') as $detalhe){
+                                //getting data de chegada
+					if($indexDetalhe==2){
+						$chegada = $detalhe->plaintext;
+				}
+				//getting data de partida
+                                        elseif($indexDetalhe==3){
+                                                $partida = $detalhe->plaintext;
+                                }
+				//getting porto de origem
+                                        elseif($indexDetalhe==4){
+                                                $origem = $detalhe->plaintext;
+                                }
+				//getting porto de escala
+                                        elseif($indexDetalhe==6){
+                                                $escala = $detalhe->plaintext;
+                                }
+				//getting porto de destino
+                                        elseif($indexDetalhe==5){
+                                                $destino = $detalhe->plaintext;
+                                }
+				//getting agente
+                                        elseif($indexDetalhe==1){
+                                                $agente = $detalhe->plaintext;
+                                }
+				$indexDetalhe++;
+				}
+				//Creating each Ship Row
+				$tempShip[$tableLine] = array('navio'=>$navio, 'chegada'=>$chegada, 'partida'=>$partida, 'origem'=>$origem, 'escala'=>$escala, 'destino'=>$destino, 'agente'=>$agente);
+				//$naviosLista[$tableLine] = $tempShip;
+				$tableLine++;
+			}
+		}
+		} //END check source IF statement
+		$escalas_EmCache[0] = $tempShip;
+		//$escalas_EmCache[1] = "Last updated at: ". date('F jS, Y');
+		$escalas_EmCache[1] = "<b>Last updated:</b> ".date('F jS, Y')." at <span class='label label-info'>".date('H')."H".date('i')."</span>";
+		//stores into cache and defines array
+                apc_store('lbook_page', $escalas_EmCache, 10);
+		$html->clear(); 
+		unset($html);
+	}
+}
+
+
 add_filter( 'page_template', 'escalas_page_template' );
 function escalas_page_template( $page_template )
 {

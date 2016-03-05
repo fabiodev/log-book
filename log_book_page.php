@@ -40,27 +40,6 @@
      }
 }
 
-//Sets dummy value of detalhes
-//$detalhes ="Nº IMO: 9388390 País de Registo: Portugal Agente: E. N. Madeirense Carga: Contentor Motivo da Escala: Operações Comerciais";
-
-        //Verifica que a lista de tags nao esta vazia e que os detalhes tem um IMO number
-  //      if(empty($shipsList) && preg_match('/(?P<digit>\d{7})/',$detalhes,$matched)){
-             //testa cada tag
-  //           foreach ($shipList as $ship) {
-                //Confirma se a tag tem imo com 7 digitos
-  //              if(preg_match('/(?P<digit>\d{7})/',$ship,$matches)){
-                   //Compara os IMO's e imprime os detalhes finais
-/*                   if($matched['digit'] == $matches['digit']){
-                        $spli=preg_split('/(?P<digit>\d{7})/',$detalhes, -1);
-                        echo $ship;
-                        echo $spli[1];
-                        break;
-                        }
-                    }
-                }
-        }
-}
-*/
 ?>
 
 
@@ -73,127 +52,54 @@
 	$msg .="<div class='alert alert-info span4'><h4 style='color:black'>Attention:";
 	$msg .="</h4><p>the information below may not be accurate and we don't accept any responsability for the use of such information</p></div>";
 
-	//
 	$tt=apc_fetch('lbook_page');
+
+	//If cache exists display content
 	if(isset($tt) && $tt != ""){
-		//Prints the responsibility alert and the table
-		echo $msg;
-		echo $tt[0];
 	}else{
+		//Gets data schedule
+	        get_shipsData();
+		$tt=apc_fetch('lbook_page');
+	}
 
-	/* gets the source */
-	$loaded =get_source();
-	 /*loads DOM for scrapping*/
-		$html = str_get_html( $loaded);
 
-		//checks if the source is correct
-		if(isset($html) && $html != "" && $html->find( '.container' ) ){
+	$vtable = "<table class='table table-bordered table-hover'>";
+	$vtable .= "<tr class='success'> <th>ID</th> <th>Navio</th> <th>Chegada</th> <th>Partida</th> <th>Origem</th> <th>Escala</th> <th>Destino</th> <th>Detalhes</th></tr>";
 
-		//Starts table construction
-		$vtable = "<table class='table table-bordered table-hover'>";
-		$vtable .= "<tr class='success'> <th>ID</th> <th>Navio</th> <th>Chegada</th> <th>Partida</th> <th>Origem</th> <th>Escala</th> <th>Destino</th> <th>Detalhes</th></tr>";
+	$shipN = 0;
 
-		//Detects the start of the important table
-		foreach( $html->find( '#ele2' ) as $maintable ){
-			//Crops the main table and counts lines
-			$tableLine=1;
-			$shipList="";
-			echo "<article>";
-			foreach( $maintable->find( '.coluna-texto' ) as $ship ){
-				//raw printout of DIV by ship
-				$shipList .= $ship;
+	foreach ($tt[0] as $ship){
 
-				//raw data
-				$navio = $ship->find( '.col-dir' );
-				$chegada = "";
-				$partida = "";
-				$origem = "";
-				$escala = "";
-				$destino = "";
-				$agente = "";
+		$shipN++;
 
-				//getting Ship Name
-				foreach( $ship->find('h2') as $detalhe){
-					$navio = $detalhe->plaintext;
-				}
+		$vtable .= "<tr><td>".$shipN."</td>";
 
-				//getting DATA
-				$indexDetalhe = 1;
-                                foreach( $ship->find('.col-dir') as $detalhe){
-
-                                //getting data de chegada
-					if($indexDetalhe==2){
-						$chegada = $detalhe->plaintext;
-				}
-
-				//getting data de partida
-                                        elseif($indexDetalhe==3){
-                                                $partida = $detalhe->plaintext;
-                                }
-
-				//getting porto de origem
-                                        elseif($indexDetalhe==4){
-                                                $origem = $detalhe->plaintext;
-                                }
-
-				//getting porto de escala
-                                        elseif($indexDetalhe==6){
-                                                $escala = $detalhe->plaintext;
-                                }
-
-				//getting porto de destino
-                                        elseif($indexDetalhe==5){
-                                                $destino = $detalhe->plaintext;
-                                }
-
-				//getting agente
-                                        elseif($indexDetalhe==1){
-                                                $agente = $detalhe->plaintext;
-                                }
-
-				$indexDetalhe++;
-				}
-
-				//Creating each Ship Row
-				$vtable .= "<tr>";
-				$vtable .= "<td>".$tableLine."</td>";
-				$vtable .= "<td>".$navio."</td><td>".$chegada."</td><td>".$partida."</td><td>".$origem."</td><td>".$escala."</td><td>".$destino."</td>";
-				$vtable .= "<td>".$agente."</td>";
-				$vtable .= "</tr>";
-				$tableLine++;
-			}
-			echo "</article>";
+		foreach($ship as $detalhe){
+			$vtable .= "<td>".$detalhe."</td>";
 		}
 
-		} //END check source IF statement
+		$vtable .= "</tr>";
+	}
 
-		$vtable .= "<tr><td colspan='8'><b>Last updated:</b> ".date('F jS, Y')." at <span class='label label-info'>".date('H')."H".date('i')."</span></td></tr>";
-		$vtable .= "</table>";
+//	$vtable .= "<tr><td colspan='8'><b>Last updated:</b> ".date('F jS, Y')." at <span class='label label-info'>".date('H')."H".date('i')."</span></td></tr>";
+	$vtable .= "<tr><td colspan='8'>".$tt[1]."</td></tr>";
+	$vtable .= "</table>";
 
-		$escalas_EmCache[0] = $vtable;
-		$escalas_EmCache[1] = "Last updated at: ". date('F jS, Y');
-
-		//stores into cache and defines array
-                apc_store('lbook_page', $escalas_EmCache, 900);
-                $tt=apc_fetch('lbook_page');
-
-		$html->clear(); 
-		unset($html);
 
 
 	//If cache exists display content
 		if(isset($tt) && $tt != ""){
 			//Prints the responsibility alert and the table
 			echo $msg;
-			//echo $shipList;
-			echo $tt[0];
+			//print_r($temShips);
+			echo $vtable;
 		}else{
 	//Display error in faillure to load cache
 		echo "<div class='alert alert-error span4'><p>Oh Snap! The Black Bierd Pirates are back ...</p>";
 		echo "<p>Try to reload this pag. If this message presists try again later or report the problem in the comments or by mail.</p></div>";
 
 		}
-}
+//}
 
 ?>
 </div>
